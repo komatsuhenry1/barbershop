@@ -1,14 +1,16 @@
 import { Link, useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { BarbershopTheme } from '../constants/BarbershopTheme';
-import { api } from '../services/api';
+import { BarbershopTheme } from '../../constants/BarbershopTheme';
+import { api } from '../../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const storage = AsyncStorage;
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -20,8 +22,13 @@ export default function LoginScreen() {
         try {
             const response = await api.login(email, password);
             console.log('Login successful:', response);
+            console.log("response data", response.data.token);
             // TODO: Save token/user info
-            router.replace('/(tabs)'); // Navigate to main app
+            await storage.setItem('token', response.data.token);
+            console.log("==================")
+            console.log("token: ", await storage.getItem("token"));
+            console.log("==================")
+            router.replace('/(admin)/dashboard'); // Navigate to main app
         } catch (error) {
             console.error('Login error:', error);
             Alert.alert('Erro', 'Falha ao realizar login. Verifique suas credenciais.');
