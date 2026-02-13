@@ -20,7 +20,7 @@ interface RegisterData {
 
 export const api = {
     login: async (email: string, password: string) => {
-        const response = await fetch(`${getBaseUrl()}/login`, {
+        const response = await fetch(`${getBaseUrl()}/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export const api = {
     },
     register: async (userData: RegisterData) => {
         // userData expects: name, email, cpf, password, avatar_url
-        const response = await fetch(`${getBaseUrl()}/register`, {
+        const response = await fetch(`${getBaseUrl()}/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

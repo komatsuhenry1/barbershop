@@ -30,6 +30,12 @@ export default function RegisterScreen() {
         try {
             const response = await api.register(formData);
             console.log('Registration successful:', response);
+
+            if (response.success === false) {
+                Alert.alert('Erro', response.message || 'Falha ao criar conta.');
+                return;
+            }
+
             Alert.alert('Sucesso', 'Conta criada com sucesso!', [
                 { text: 'OK', onPress: () => router.replace('/login') }
             ]);

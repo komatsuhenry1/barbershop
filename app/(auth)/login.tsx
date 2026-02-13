@@ -1,9 +1,9 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link, useRouter } from 'expo-router';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { BarbershopTheme } from '../../constants/BarbershopTheme';
 import { api } from '../../services/api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -18,17 +18,32 @@ export default function LoginScreen() {
             return;
         }
 
+        console.log("email: ", email);
+        console.log("password: ", password);
+
         setLoading(true);
         try {
             const response = await api.login(email, password);
             console.log('Login successful:', response);
-            console.log("response data", response.data.token);
+
+            if (response.success === false) {
+                Alert.alert('Erro', response.message || 'Login falhou.');
+                return;
+            }
+
+            // console.log("response data", response.data.token);
             // TODO: Save token/user info
-            await storage.setItem('token', response.data.token);
-            console.log("==================")
-            console.log("token: ", await storage.getItem("token"));
-            console.log("==================")
-            router.replace('/(admin)/dashboard'); // Navigate to main app
+            if (response.data && response.data.token) {
+                await storage.setItem('token', response.data.token);
+                if (response.data.user.role === "USER") {
+                    router.push('/(user)/main-page'); // Navigate to main app
+                } else {
+                    router.push('/(admin)/dashboard'); // Navigate to main app
+                }
+            } else {
+                Alert.alert('Erro', 'Resposta inválida do servidor.');
+            }
+
         } catch (error) {
             console.error('Login error:', error);
             Alert.alert('Erro', 'Falha ao realizar login. Verifique suas credenciais.');
