@@ -35,6 +35,7 @@ export default function LoginScreen() {
             // TODO: Save token/user info
             if (response.data && response.data.token) {
                 await storage.setItem('token', response.data.token);
+                await storage.setItem('role', response.data.user.role);
                 if (response.data.user.role === "USER") {
                     router.push('/(user)/main-page'); // Navigate to main app
                 } else {

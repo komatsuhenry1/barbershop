@@ -18,6 +18,17 @@ interface RegisterData {
     avatar_url?: string;
 }
 
+interface SchedulingData {
+    user_id: number;
+    service_id: number;
+    service_name: string;
+    barber_id: number;
+    barber_name: string;
+    date: string;
+    time: string;
+    status: string;
+}
+
 export const api = {
     login: async (email: string, password: string) => {
         const response = await fetch(`${getBaseUrl()}/auth/login`, {
@@ -37,6 +48,27 @@ export const api = {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(userData),
+        });
+        return response.json();
+    },
+    schedule: async (data: SchedulingData) => {
+        const response = await fetch(`${getBaseUrl()}/scheduling/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify(data),
+        });
+        return response.json();
+    },
+    getDashboard: async (data: any) => {
+        const response = await fetch(`${getBaseUrl()}/scheduling/dashboard`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${data}`,
+            },
         });
         return response.json();
     }

@@ -21,6 +21,7 @@ export default function RootLayout() {
         <Stack.Screen name="(auth)/register" options={{ headerShown: false }} />
         <Stack.Screen name="(user)/main-page" options={{ headerShown: false }} />
         <Stack.Screen name="(admin)/dashboard" options={{ headerShown: false }} />
+        
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
